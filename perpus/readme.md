@@ -79,6 +79,4 @@ DB_CONFIG = {
 
 ## 👨‍💻 Pembuat
 
-Proyek ini dikembangkan sebagai tugas praktikum Python GUI & MySQL.
-
-> Dibuat dengan ❤️ menggunakan Tkinter + MySQL
+Taro
