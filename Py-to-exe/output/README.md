@@ -9,3 +9,5 @@ Installing python converter
 Run the command to open converter GUI
 ```python
 auto-py-to-exe
+```
+Good luck 😐
