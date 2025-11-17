@@ -1,15 +1,6 @@
 import sqlite3
 from tkinter import messagebox
-
-DB_FILE = "keuangan.db"
-
-def connect_db():
-    try:
-        conn: sqlite3.Connection = sqlite3.connect(DB_FILE)
-        return conn
-    except sqlite3.Error as e:
-        messagebox.showerror("Database Error", f"Gagal Connect ke Database: {e}")
-        return None
+from db.connection import connect_db
 
 def init_user():
     conn = connect_db()
@@ -22,8 +13,12 @@ def init_user():
                     password TEXT NOT NULL,
                     nama TEXT NOT NULL
                 )""")
-#user default atau admin
-    cur.execute("INSERT OR IGNORE INTO users (username, password, nama) VALUES (?, ?, ?)", 
+#cek table kosong
+    cur.execute("SELECT COUNT(*) FROM users")
+    count = cur.fetchone()[0]
+    if count == 0:
+        #user default atau admin
+        cur.execute("INSERT OR IGNORE INTO users (username, password, nama) VALUES (?, ?, ?)", 
                 ("admin", "admin123", "Administrator"))
     messagebox.showinfo("Info", "User default: admin/admin123")
     conn.commit()
@@ -47,3 +42,17 @@ def handle_login(username, password):
         messagebox.showinfo("Sukses", f"Selamat datang, {user[3]}!")
     else:
         messagebox.showerror("Gagal", "Username atau password salah!")
+
+def tambah_user(username, password, nama):
+    conn = connect_db()
+    cur = conn.cursor()
+    try:
+        cur.execute("INSERT INTO users (username, password, nama) VALUES (?, ?, ?)", 
+                    (username, password, nama))
+        conn.commit()
+        return True
+    except sqlite3.IntegrityError:
+        messagebox.showerror("Error", "Username sudah digunakan.")
+        return False
+    finally:
+        conn.close()
